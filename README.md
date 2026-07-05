@@ -1,2 +1,168 @@
 # clash-yaml
 个人使用clash yaml分享
+mixed-port: 7890
+unified-delay: true
+tcp-concurrent: true
+allow-lan: false
+ipv6: false
+mode: Rule
+log-level: error
+find-process-mode: strict
+external-controller: 127.0.0.1:9090
+geodata-mode: true
+geo-auto-update: true
+geo-update-interval: 7
+geox-url:
+  geoip: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geoip.dat
+  geosite: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/geosite.dat
+  mmdb: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/country.mmdb
+  asn: https://raw.githubusercontent.com/MetaCubeX/meta-rules-dat/release/GeoLite2-ASN.mmdb
+profile:
+  store-selected: true
+  store-fake-ip: true
+sniffer:
+  enable: true
+  force-dns-mapping: true
+  parse-pure-ip: false
+  override-destination: true
+  sniff:
+    TLS:
+      ports: [443]
+  skip-domain:
+    - +.lan
+    - +.local
+    - localhost
+tun:
+  enable: true
+  stack: system
+  dns-hijack:
+    - any:53
+    - tcp://any:53
+  auto-route: true
+  auto-redir: true
+  auto-detect-interface: true
+dns:
+  enable: true
+  prefer-h3: true
+  ipv6: false
+  respect-rules: true
+  listen: 127.0.0.1:53
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  use-hosts: true
+  fake-ip-filter:
+    - "*.lan"
+    - "*.local"
+    - "*.arpa"
+    - "localhost"
+    - "localhost.ptlogin2.qq.com"
+    - "*.msftconnecttest.com"
+    - "*.msftncsi.com"
+    - "time.*.com"
+    - "ntp.*.com"
+    - "+.microsoft.com"
+    - "+.qq.com"
+    - "+.weixin.qq.com"
+    - "+.wechat.com"
+    - "+.alipay.com"
+    - "+.taobao.com"
+    - "+.jd.com"
+  default-nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  nameserver:
+    - https://1.1.1.1/dns-query
+    - https://dns.quad9.net/dns-query
+  nameserver-policy:
+    geosite:category-ads-all:
+      - rcode://success
+    geosite:private:
+      - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
+    geosite:geolocation-cn:
+      - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
+    geosite:geolocation-!cn:
+      - https://1.1.1.1/dns-query
+      - https://dns.quad9.net/dns-query
+  proxy-server-nameserver:
+    - https://dns.alidns.com/dns-query
+    - https://doh.pub/dns-query
+proxy-providers:
+  V2Ray_configs_64:
+    type: http
+    url: "https://raw.githubusercontent.com/WLget/V2Ray_configs_64/refs/heads/master/ConfigSub_list.txt"
+    interval: 21600
+    path: ./proxy_providers/V2Ray_configs_64.yaml
+    exclude-type: "socks5|Http"
+    health-check:
+      enable: true
+      url: https://cp.cloudflare.com/generate_204
+      interval: 600
+      timeout: 3000
+      expected-status: 204
+  free18:
+    type: http
+    url: "https://raw.githubusercontent.com/free18/v2ray/refs/heads/main/v.txt"
+    interval: 21600
+    path: ./proxy_providers/free18.yaml
+    exclude-type: "socks5|Http"
+    health-check:
+      enable: true
+      url: https://cp.cloudflare.com/generate_204
+      interval: 600
+      timeout: 3000
+      expected-status: 204
+  shaoyouvip:
+    type: http
+    url: "https://raw.githubusercontent.com/shaoyouvip/free/refs/heads/main/base64.txt"
+    interval: 21600
+    path: ./proxy_providers/shaoyouvip.yaml
+    exclude-type: "socks5|Http"
+    health-check:
+      enable: true
+      url: https://cp.cloudflare.com/generate_204
+      interval: 600
+      timeout: 3000
+      expected-status: 204
+  ssrsub:
+    type: http
+    url: "https://gh-proxy.com/raw.githubusercontent.com/ssrsub/ssr/master/v2ray"
+    interval: 21600
+    path: ./proxy_providers/ssrsub.yaml
+    exclude-type: "socks5|Http"
+    health-check:
+      enable: true
+      url: https://cp.cloudflare.com/generate_204
+      interval: 600
+      timeout: 3000
+      expected-status: 204
+proxy-groups:
+  - name: 🚀 代理策略
+    type: select
+    proxies:
+      - ⚖️ 负载均衡
+      - 🔰 手动选择
+      - 🔄 故障转移
+  - name: ⚖️ 负载均衡
+    type: load-balance
+    strategy: consistent-hashing
+    url: https://cp.cloudflare.com/generate_204
+    interval: 600
+    tolerance: 80
+    lazy: true
+    include-all-providers: true
+  - name: 🔰 手动选择
+    type: select
+    include-all-providers: true
+  - name: 🔄 故障转移
+    type: fallback
+    url: https://cp.cloudflare.com/generate_204
+    interval: 600
+    include-all-providers: true
+rules:
+  - GEOSITE,category-ads-all,REJECT
+  - GEOSITE,private,DIRECT
+  - GEOSITE,geolocation-cn,DIRECT
+  - GEOSITE,geolocation-!cn,🚀 代理策略
+  - MATCH,🚀 代理策略
