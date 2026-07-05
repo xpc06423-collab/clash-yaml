@@ -1,0 +1,31 @@
+Clash Meta YAML
+🚀 精简、高性能、低泄漏的 Mihomo（Clash Meta）配置模板。
+特点
+✅ Fake-IP DNS
+✅ TUN Mode
+✅ GeoSite 分流
+✅ GeoSite 广告拦截
+✅ 国内外 DNS 自动分流
+✅ 自动更新 Geo 数据
+✅ Load Balance
+✅ Fallback
+✅ Health Check
+✅ Fake-IP Filter
+✅ Sniffer
+✅ IPv6 Disabled
+✅ Prefer HTTP/3
+✅ 免费 Provider 示例
+设计理念
+本配置追求：
+尽可能精简
+所有模块互相配合
+DNS 与 Rules 保持一致
+减少 DNS 泄漏
+减少污染
+保持稳定
+不是追求规则数量，而是追求配置结构。
+支持
+Mihomo
+Clash Meta
+Clash Verge Rev
+MetaCubeX
